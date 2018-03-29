@@ -1,7 +1,6 @@
 package persist
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/bean-du/crawler/engine"
@@ -22,7 +21,7 @@ func ItemSaver(index string) (chan engine.Item, error) {
 			item := <-out
 			log.Printf("ItemSaver : got item #%d, %v", itemCount, item)
 			itemCount++
-			err := save(client, item, index)
+			err := Save(client, item, index)
 			if err != nil {
 				log.Fatalf("Item Saver: save error saving  item %v: %v", item, err)
 			}
@@ -31,7 +30,7 @@ func ItemSaver(index string) (chan engine.Item, error) {
 	return out, nil
 }
 
-func save(client *elastic.Client, item engine.Item, index string) error {
+func Save(client *elastic.Client, item engine.Item, index string) error {
 
 	if item.Type == "" {
 		return errors.New("must supply Type")
@@ -41,11 +40,10 @@ func save(client *elastic.Client, item engine.Item, index string) error {
 	if item.Id != "" {
 		indexService.Id(item.Id)
 	}
-	resp, err := indexService.Do(context.Background())
+	_, err := indexService.Do(context.Background())
 
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%+v", resp)
 	return nil
 }
