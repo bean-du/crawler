@@ -35,7 +35,7 @@ func Fatch(url string) ([]byte, error) {
 	return ioutil.ReadAll(utf8NewReader)
 }
 
-// 判断网页编码格式
+// 判断网页编码格式.
 func determineEncoding(r *bufio.Reader) encoding.Encoding {
 	bytes, err := r.Peek(1024)
 	if err != nil {
